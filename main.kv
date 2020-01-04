@@ -1,13 +1,15 @@
 #:kivy 1.11.1
+#:import Window kivy.core.window.Window
 #:import GameScreen shifttype.gamescreen.GameScreen
 
 
 <Tile>:
     text: self.letter
-    font_size: 50
+    font_size: self.width / 2
 
 <Reel>:
     orientation: 'vertical'
-    width: 100
+    size_hint: 1/8, None
+    size: self.width, self.width * len(self.letters)
 
 GameScreen:

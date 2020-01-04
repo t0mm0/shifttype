@@ -1,7 +1,9 @@
+from kivy.core.window import Window
 from kivy.logger import Logger
 from kivy.properties import BooleanProperty, ListProperty, StringProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
+from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.widget import Widget
 
 from . import puzzle
@@ -25,11 +27,10 @@ class Reel(BoxLayout):
         self.tiles = [Tile(letter=letter) for letter in self.letters]
         for tile in self.tiles:
             self.add_widget(tile)
-        self.height = len(self.tiles) * 100
 
 
 
-class GameScreen(Widget):
+class GameScreen(FloatLayout):
     reels = []
 
     def __init__(self, **kwargs):
@@ -40,8 +41,8 @@ class GameScreen(Widget):
 
     def _make_reels(self, reels):
         self.reels = [Reel(letters=reel) for reel in reels]
-        x = 200
+        x = 0
         for reel in self.reels:
-            reel.pos = (x,100)
+            reel.pos_hint = {'x': x / 8}
             self.add_widget(reel)
-            x += 100
+            x += 1
