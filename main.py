@@ -1,13 +1,15 @@
-from kivy.app import App
-from kivy.uix.label import Label
+from kivymd.app import MDApp
+from kivy.config import Config
 
-class MainApp(App):
-    def build(self):
-        label = Label(text='Hello from Kivy',
-                      size_hint=(.5, .5),
-                      pos_hint={'center_x': .5, 'center_y': .5})
+Config.read('config.ini')
 
-        return label
+
+class MainApp(MDApp):
+    def __init__(self, **kwargs):
+        self.title = "shiftTYPE"
+        super().__init__(**kwargs)
+    pass
+
 
 if __name__ == '__main__':
     app = MainApp()
