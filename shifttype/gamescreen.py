@@ -93,6 +93,7 @@ class Reel(RelativeLayout):
 class GameArea(BoxLayout):
     reels = []
     num_letters = NumericProperty(defaultvalue=5)
+    num_core = NumericProperty(defaultvalue=4)
     running = False
     found_words = ListProperty()
     time = NumericProperty()
@@ -100,12 +101,15 @@ class GameArea(BoxLayout):
 
     def __init__(self, **kwargs):
         super(GameArea, self).__init__(**kwargs)
-        self.reset(num_letters=5, num_core=4)
+        self.num_letters, self.num_core = puzzle.DIFFICULTY[
+            datetime.datetime.today().weekday()]
+        self.reset()
 
-    def reset(self, num_letters=5, num_core=4):
+    def reset(self):
         self.time = 0
-        self.num_letters = num_letters
-        self.puzzle = puzzle.Puzzle(num_letters=num_letters, num_core=num_core)
+        self.puzzle = puzzle.Puzzle(
+            num_letters=self.num_letters,
+            num_core=self.num_core)
         Logger.debug(f"core_words: {self.puzzle.core_words}")
         self._make_reels(self.puzzle.reels)
         self.running = True

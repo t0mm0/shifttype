@@ -4,7 +4,7 @@ import re
 
 MODE_DAILY = 0
 MODE_RANDOM = 1
-
+DIFFICULTY = {0: (5, 4), 1: (5, 5), 2: (6, 4), 3: (6, 5), 4: (7, 4), 5: (7, 5), 6: (7, 5)}
 
 class Puzzle:
     def __init__(self, mode=MODE_DAILY, num_letters=5, num_core=4):
