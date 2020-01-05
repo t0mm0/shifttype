@@ -127,6 +127,11 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# buildozer artifacts
+.buildozer
+bin/
+!buildozer.spec
+
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json

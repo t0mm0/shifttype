@@ -18,7 +18,7 @@ class Puzzle:
         self.core_words = self._pick_words()
         self.reels = self._make_reels()
 
-    def _pick_words(self, filename='/usr/share/dict/words'):
+    def _pick_words(self, filename='assets/words'):
         choice = set()
         lower = re.compile('^[a-z]+$')
         with open(filename) as dict_file:
