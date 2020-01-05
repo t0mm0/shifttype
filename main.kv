@@ -1,11 +1,11 @@
 #:kivy 1.11.1
-#:import Window kivy.core.window.Window
 #:import GameScreen shifttype.gamescreen.GameScreen
 
 
 <Tile>:
     text: self.letter
     font_size: self.width / 2
+    background_color: self.get_color(self.used)
 
 <Reel>:
     orientation: 'vertical'
