@@ -1,10 +1,13 @@
+from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.logger import Logger
-from kivy.properties import BooleanProperty, ListProperty, StringProperty
+from kivy.properties import BooleanProperty, ListProperty, NumericProperty, StringProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.widget import Widget
+from kivy.uix.relativelayout import RelativeLayout
+from kivy.utils import platform
 
 from . import puzzle
 
@@ -12,37 +15,51 @@ from . import puzzle
 class Tile(Button):
     letter = StringProperty()
     used = BooleanProperty(defaultvalue=False)
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         Logger.debug(f"new tile: {self.letter}")
 
 
-class Reel(BoxLayout):
+class ReelSlider(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+class Reel(RelativeLayout):
     letters = ListProperty()
     tiles = []
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         Logger.debug(f"new reel: {self.letters}")
+        self.slider = ReelSlider()
         self.tiles = [Tile(letter=letter) for letter in self.letters]
         for tile in self.tiles:
-            self.add_widget(tile)
+            self.slider.add_widget(tile)
+        self.add_widget(self.slider)
 
 
-
-class GameScreen(FloatLayout):
+class GameArea(BoxLayout):
     reels = []
+    num_letters = NumericProperty(defaultvalue=5)
 
     def __init__(self, **kwargs):
-        super(GameScreen, self).__init__(**kwargs)
-        self.puzzle = puzzle.Puzzle()
+        super(GameArea, self).__init__(**kwargs)
+        print(self.num_letters)
+        self.puzzle = puzzle.Puzzle(num_letters=self.num_letters)
         Logger.debug(f"core_words: {self.puzzle.core_words}")
         self._make_reels(self.puzzle.reels)
 
     def _make_reels(self, reels):
         self.reels = [Reel(letters=reel) for reel in reels]
-        x = 0
         for reel in self.reels:
-            reel.pos_hint = {'x': x / 8}
             self.add_widget(reel)
-            x += 1
+
+
+class GameScreen(FloatLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.add_widget(GameArea(num_letters=5))
+        if platform == 'linux':
+            Window.size = (800, 1200)

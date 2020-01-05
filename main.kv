@@ -9,7 +9,16 @@
 
 <Reel>:
     orientation: 'vertical'
-    size_hint: 1/8, None
-    size: self.width, self.width * len(self.letters)
+
+<ReelSlider>:
+    size_hint: 1, None
+    size:  self.width, self.width * len(self.children)
+    orientation: 'vertical'
+
+<GameArea>:
+    orientation: 'horizontal'
+    size_hint: self.num_letters/7.2, None
+    size: self.width, self.width / self.num_letters * 9
+    center: Window.center
 
 GameScreen:
