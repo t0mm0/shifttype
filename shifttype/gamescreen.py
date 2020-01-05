@@ -1,3 +1,4 @@
+import datetime
 from kivy.animation import Animation
 from kivy.app import App
 from kivy.clock import Clock
@@ -94,17 +95,25 @@ class GameArea(BoxLayout):
     num_letters = NumericProperty(defaultvalue=5)
     running = False
     found_words = ListProperty()
+    time = NumericProperty()
+    timer = None
 
     def __init__(self, **kwargs):
         super(GameArea, self).__init__(**kwargs)
         self.reset(num_letters=5, num_core=4)
 
-    def reset(self, num_letters=5, num_core=4, *args):
+    def reset(self, num_letters=5, num_core=4):
+        self.time = 0
         self.num_letters = num_letters
         self.puzzle = puzzle.Puzzle(num_letters=num_letters, num_core=num_core)
         Logger.debug(f"core_words: {self.puzzle.core_words}")
         self._make_reels(self.puzzle.reels)
         self.running = True
+        self.timer = Clock.schedule_interval(self.update_time, 1)
+
+    def update_time(self, dt):
+        self.time += 1
+        Logger.debug(f"timer: {self.time}")
 
     def _make_reels(self, reels):
         self.found_words = []
@@ -129,16 +138,18 @@ class GameArea(BoxLayout):
                         reel.use_selected()
                     Logger.debug(f"finished: {self.test_complete()}")
                     if self.test_complete():
+                        self.timer.cancel()
+                        t = str(datetime.timedelta(seconds=self.time))
                         dialog = MDDialog(
                             title="You Won!!!",
                             text=f"Found {len(self.found_words)} words: " +
-                            ', '.join(self.found_words),
+                            ', '.join(self.found_words) +
+                            f"\n\nIt took you {t}!",
                             size_hint=(0.8, 0.4),
-                            text_button_ok="Woohoo!",
+                            text_button_ok="Woohoo ;)",
                             events_callback=lambda *args: self.reset(),
                         )
                         dialog.open()
-
 
     def test_complete(self):
         for reel in self.reels:
