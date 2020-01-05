@@ -1,4 +1,5 @@
 from kivy.animation import Animation
+from kivy.app import App
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.logger import Logger
@@ -23,8 +24,8 @@ class Tile(Button):
 
     def get_color(self, used):
         if used:
-            return (1, 0, 0, 1)
-        return (0, 0, 0, 1)
+            return App.get_running_app().theme_cls.primary_color
+        return App.get_running_app().theme_cls.bg_normal
 
 
 class ReelSlider(BoxLayout):
@@ -116,8 +117,8 @@ class GameArea(BoxLayout):
                 if word not in self.found_words:
                     self.found_words.append(word)
                     Logger.debug(f"total found: {self.found_words}")
-                for reel in self.reels:
-                    reel.use_selected()
+                    for reel in self.reels:
+                        reel.use_selected()
 
 
 class GameScreen(AnchorLayout):
