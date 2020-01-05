@@ -148,7 +148,9 @@ class GameArea(BoxLayout):
                             title="You Won!!!",
                             text=f"Found {len(self.found_words)} words: " +
                             ', '.join(self.found_words) +
-                            f"\n\nIt took you {t}!",
+                            f"\n\nIt took you {t}!\n\n" +
+                            f"Today's core words were:" +
+                            ', '.join(self.puzzle.core_words),
                             size_hint=(0.8, 0.4),
                             text_button_ok="Woohoo ;)",
                             events_callback=lambda *args: self.reset(),
