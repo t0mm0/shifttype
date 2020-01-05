@@ -2,9 +2,9 @@ from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.logger import Logger
 from kivy.properties import BooleanProperty, ListProperty, NumericProperty, StringProperty
+from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
-from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.widget import Widget
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.utils import platform
@@ -57,7 +57,7 @@ class GameArea(BoxLayout):
             self.add_widget(reel)
 
 
-class GameScreen(FloatLayout):
+class GameScreen(AnchorLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.add_widget(GameArea(num_letters=5))
