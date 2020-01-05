@@ -10,6 +10,7 @@ from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.utils import platform
+from kivymd.uix.dialog import MDDialog
 
 from . import puzzle
 
@@ -20,7 +21,7 @@ class Tile(Button):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        Logger.debug(f"new tile: {self.letter} {self.state}")
+        Logger.debug(f"new tile: {self.letter}")
 
     def get_color(self, used):
         if used:
@@ -96,12 +97,19 @@ class GameArea(BoxLayout):
 
     def __init__(self, **kwargs):
         super(GameArea, self).__init__(**kwargs)
-        self.puzzle = puzzle.Puzzle(num_letters=self.num_letters)
+        self.reset(num_letters=5, num_core=4)
+
+    def reset(self, num_letters=5, num_core=4, *args):
+        self.num_letters = num_letters
+        self.puzzle = puzzle.Puzzle(num_letters=num_letters, num_core=num_core)
         Logger.debug(f"core_words: {self.puzzle.core_words}")
         self._make_reels(self.puzzle.reels)
         self.running = True
 
     def _make_reels(self, reels):
+        self.found_words = []
+        for reel in self.reels:
+            self.remove_widget(reel)
         self.reels = [Reel(letters=reel) for reel in reels]
         for reel in self.reels:
             reel.bind(selected=self._selected)
@@ -119,6 +127,25 @@ class GameArea(BoxLayout):
                     Logger.debug(f"total found: {self.found_words}")
                     for reel in self.reels:
                         reel.use_selected()
+                    Logger.debug(f"finished: {self.test_complete()}")
+                    if self.test_complete():
+                        dialog = MDDialog(
+                            title="You Won!!!",
+                            text=f"Found {len(self.found_words)} words: " +
+                            ', '.join(self.found_words),
+                            size_hint=(0.8, 0.4),
+                            text_button_ok="Woohoo!",
+                            events_callback=lambda *args: self.reset(),
+                        )
+                        dialog.open()
+
+
+    def test_complete(self):
+        for reel in self.reels:
+            for tile in reel.tiles:
+                if not tile.used:
+                    return False
+        return True
 
 
 class GameScreen(AnchorLayout):
