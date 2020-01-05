@@ -9,7 +9,8 @@ MODE_RANDOM = 1
 class Puzzle:
     def __init__(self, mode=MODE_DAILY, num_letters=5, num_core=4):
         if mode == MODE_DAILY:
-            self.random = random.Random(str(date.today()))
+            self.random = random.Random(
+                str(date.today()) + f"{num_letters}{num_core}")
         else:
             self.random = random.Random()
 
