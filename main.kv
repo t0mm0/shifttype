@@ -18,6 +18,12 @@
 <GameArea>:
     orientation: 'horizontal'
     size_hint: self.num_letters/7.2, None
+    canvas.after:
+        Color:
+            rgba: 1, 0, 0, .5
+        Line:
+            rectangle: self.x, self.y, self.width, self.width / self.num_letters
+            width: 5
 
 GameScreen:
     anchor_x: 'center'
