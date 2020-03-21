@@ -1,8 +1,17 @@
 #:kivy 1.11.1
 #:import GameScreen shifttype.gamescreen.GameScreen
 
+# Define your background color Template
+<BackgroundColor>:
+    background_color: 1, 1, 1, 1
+    canvas.before:
+        Color:
+            rgba: root.background_color
+        Rectangle:
+            size: self.size
+            pos: self.pos
 
-<Tile>:
+<TsTile>:
     text: self.letter
     font_size: self.width / 2
     background_color: self.get_color(self.used)

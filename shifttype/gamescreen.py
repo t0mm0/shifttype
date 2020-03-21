@@ -7,7 +7,7 @@ from kivy.logger import Logger
 from kivy.properties import BooleanProperty, ListProperty, NumericProperty, StringProperty
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
+from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.utils import platform
@@ -15,8 +15,10 @@ from kivymd.uix.dialog import MDDialog
 
 from . import puzzle
 
+class BackgroundColor(Widget):
+    pass
 
-class Tile(Button):
+class TsTile(Label, BackgroundColor):
     letter = StringProperty()
     used = BooleanProperty(defaultvalue=False)
 
@@ -26,8 +28,8 @@ class Tile(Button):
 
     def get_color(self, used):
         if used:
-            return App.get_running_app().theme_cls.primary_color
-        return App.get_running_app().theme_cls.bg_normal
+            return (1, 0, 0, 1)
+        return (.5, .5, .5, 1)
 
 
 class ReelSlider(BoxLayout):
@@ -79,7 +81,7 @@ class Reel(RelativeLayout):
         super().__init__(**kwargs)
         Logger.debug(f"new reel: {self.letters}")
         self.slider = ReelSlider()
-        self.tiles = [Tile(letter=letter) for letter in self.letters]
+        self.tiles = [TsTile(letter=letter) for letter in self.letters]
         for tile in self.tiles:
             self.slider.add_widget(tile)
         self.add_widget(self.slider)

@@ -1,10 +1,15 @@
-from kivymd.app import MDApp
-from kivy.config import Config
+import kivy
+kivy.require('1.11.0')
 
-Config.read('config.ini')
+from kivy.app import App
+from kivy.logger import Logger
+import logging
 
 
-class MainApp(MDApp):
+Logger.setLevel(logging.DEBUG)
+
+
+class MainApp(App):
     def __init__(self, **kwargs):
         self.title = "shiftTYPE"
         super().__init__(**kwargs)
