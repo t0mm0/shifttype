@@ -12,7 +12,6 @@ from kivy.uix.widget import Widget
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.screenmanager import Screen
 from kivy.utils import platform
-from kivymd.uix.dialog import MDDialog
 
 from . import puzzle
 
@@ -152,18 +151,12 @@ class GameScreen(Screen):
                         self.timer.cancel()
                         self.running = False
                         t = str(datetime.timedelta(seconds=self.time))
-                        dialog = MDDialog(
-                            title="You Won!!!",
-                            text=f"Found {len(self.found_words)} words: " +
-                            ', '.join(self.found_words) +
-                            f"\n\nIt took you {t}!\n\n" +
-                            f"Today's core words were:" +
-                            ', '.join(self.puzzle.core_words),
-                            size_hint=(0.8, 0.4),
-                            text_button_ok="Woohoo ;)",
-                            events_callback=lambda *args: self.reset(),
-                        )
-                        dialog.open()
+                        self.ids.game_over_label.text = (f"Found {len(self.found_words)} words:\n\n" 
+                            f"{', '.join(self.found_words)}" 
+                            f"\n\nIt took you {t}!\n\n" 
+                            f"Today's core words were:\n\n"
+                            f"{', '.join(self.puzzle.core_words)}")
+                        self.ids.game_over.opacity = 1
 
     def test_complete(self):
         for reel in self.reels:

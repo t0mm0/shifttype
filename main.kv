@@ -38,7 +38,23 @@
             Line:
                 rectangle: self.x, self.y, self.width, self.width / root.num_letters
                 width: 5
- 
+    BoxLayout:
+        id: game_over
+        orientation: 'vertical'
+        opacity: 0
+        background_color: 0, 0, 0, 0.75
+        canvas.before:
+            Color:
+                rgba: self.background_color
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        Label:
+            id: game_over_label
+            text_size: root.width, None
+            size: self.texture_size
+            halign: 'center'
+
 ScreenManager:
     id: screen_manager
     GameScreen:
