@@ -15,8 +15,10 @@ from kivy.utils import platform
 
 from . import puzzle
 
+
 class BackgroundColor(Widget):
     pass
+
 
 class TsTile(Label, BackgroundColor):
     letter = StringProperty()
@@ -151,11 +153,11 @@ class GameScreen(Screen):
                         self.timer.cancel()
                         self.running = False
                         t = str(datetime.timedelta(seconds=self.time))
-                        self.ids.game_over_label.text = (f"Found {len(self.found_words)} words:\n\n" 
-                            f"{', '.join(self.found_words)}" 
-                            f"\n\nIt took you {t}!\n\n" 
-                            f"Today's core words were:\n\n"
-                            f"{', '.join(self.puzzle.core_words)}")
+                        self.ids.game_over_label.text = (f"Found {len(self.found_words)} words:\n\n"
+                                                         f"{', '.join(self.found_words)}"
+                                                         f"\n\nIt took you {t}!\n\n"
+                                                         f"Today's core words were:\n\n"
+                                                         f"{', '.join(self.puzzle.core_words)}")
                         self.ids.game_over.opacity = 1
 
     def test_complete(self):
@@ -164,5 +166,4 @@ class GameScreen(Screen):
                 if not tile.used:
                     return False
         return True
-
 
