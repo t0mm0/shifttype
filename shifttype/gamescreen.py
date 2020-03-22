@@ -15,9 +15,40 @@ from kivy.utils import platform
 
 from . import puzzle
 
+from jnius import autoclass
+
+PythonActivity = autoclass('org.renpy.android.PythonActivity')
+Intent = autoclass('android.content.Intent')
+String = autoclass('java.lang.String')
+
 
 class BackgroundColor(Widget):
     pass
+
+
+class GameOver(BoxLayout):
+    game_over_text = StringProperty()
+    time = StringProperty()
+    found = NumericProperty()
+    core_found = NumericProperty()
+    core = NumericProperty()
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        Clock.schedule_once(self._finish_init)
+
+    def _finish_init(self, dt):
+        self.ids.game_over_label.text = self.game_over_text
+
+    def share(self):
+        share_text = (f"I solved the ShiftType Daily Puzzle in {self.time} - "
+                      f"I found {self.found} words, and {self.core_found} of {self.core} core words!")
+        intent = Intent()
+        intent.setAction(Intent.ACTION_SEND)
+        intent.putExtra(Intent.EXTRA_TEXT, String(share_text))
+        intent.setType('text/plain')
+        chooser = Intent.createChooser(intent, String('Share...'))
+        PythonActivity.mActivity.startActivity(chooser)
 
 
 class TsTile(Label, BackgroundColor):
@@ -153,13 +184,16 @@ class GameScreen(Screen):
                         self.timer.cancel()
                         self.running = False
                         t = str(datetime.timedelta(seconds=self.time))
-                        self.ids.game_over_label.text = ("[size=36sp][b]Well done![/b][/size]\n\n"
-                                                         f"You found {len(self.found_words)} words:\n\n"
-                                                         f"{', '.join(sorted(self.found_words))}"
-                                                         f"\n\nIt took you {t}!\n\n"
-                                                         f"Today's core words were:\n\n"
-                                                         f"{', '.join(self._format_core_words())}")
-                        self.ids.game_over.opacity = 1
+                        game_over_text = ("[size=36sp][b]Well done![/b][/size]\n\n"
+                                          f"You found {len(self.found_words)} words:\n\n"
+                                          f"{', '.join(sorted(self.found_words))}"
+                                          f"\n\nIt took you {t}!\n\n"
+                                          f"Today's core words were:\n\n"
+                                          f"{', '.join(self._format_core_words())}")
+                        core_found = len(set(self.puzzle.core_words).intersection(self.found_words))
+                        self.add_widget(
+                            GameOver(game_over_text=game_over_text, time=t,
+                                     found=len(self.found_words), core=self.num_core, core_found=core_found))
 
     def _format_core_words(self):
         return [f"[color=#00ff00]{w}[/color]" if w in self.found_words else w for w in self.puzzle.core_words]
