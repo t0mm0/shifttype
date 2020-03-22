@@ -153,12 +153,16 @@ class GameScreen(Screen):
                         self.timer.cancel()
                         self.running = False
                         t = str(datetime.timedelta(seconds=self.time))
-                        self.ids.game_over_label.text = (f"Found {len(self.found_words)} words:\n\n"
-                                                         f"{', '.join(self.found_words)}"
+                        self.ids.game_over_label.text = ("[size=36sp][b]Well done![/b][/size]\n\n"
+                                                         f"You found {len(self.found_words)} words:\n\n"
+                                                         f"{', '.join(sorted(self.found_words))}"
                                                          f"\n\nIt took you {t}!\n\n"
                                                          f"Today's core words were:\n\n"
-                                                         f"{', '.join(self.puzzle.core_words)}")
+                                                         f"{', '.join(self._format_core_words())}")
                         self.ids.game_over.opacity = 1
+
+    def _format_core_words(self):
+        return [f"[color=#00ff00]{w}[/color]" if w in self.found_words else w for w in self.puzzle.core_words]
 
     def test_complete(self):
         for reel in self.reels:
@@ -166,4 +170,3 @@ class GameScreen(Screen):
                 if not tile.used:
                     return False
         return True
-
