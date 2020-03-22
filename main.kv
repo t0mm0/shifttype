@@ -24,16 +24,24 @@
     size:  self.width, self.width * len(self.children)
     orientation: 'vertical'
 
-<GameArea>:
-    orientation: 'horizontal'
-    size_hint: self.num_letters/7.2, None
-    canvas.after:
-        Color:
-            rgba: 1, 0, 0, .5
-        Line:
-            rectangle: self.x, self.y, self.width, self.width / self.num_letters
-            width: 5
-
-GameScreen:
-    anchor_x: 'center'
-    anchor_y: 'center'
+<GameScreen>:
+    real_game: real_game
+    BoxLayout:
+        id: real_game
+        orientation: 'horizontal'
+        size_hint: root.num_letters / 7.2, None
+        center_y: root.center_y
+        x: (root.width  - self.width) / 2
+        canvas.after:
+            Color:
+                rgba: 0, 1, 0, 1
+            Line:
+                rectangle: self.x, self.y, self.width, self.width / root.num_letters
+                width: 5
+ 
+ScreenManager:
+    id: screen_manager
+    GameScreen:
+        id: game_screen
+        name: 'game'
+        manager: 'screen_manager'

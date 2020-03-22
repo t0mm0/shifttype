@@ -4,12 +4,13 @@ from kivy.app import App
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.logger import Logger
-from kivy.properties import BooleanProperty, ListProperty, NumericProperty, StringProperty
+from kivy.properties import BooleanProperty, ListProperty, NumericProperty, ObjectProperty, StringProperty
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy.uix.relativelayout import RelativeLayout
+from kivy.uix.screenmanager import Screen
 from kivy.utils import platform
 from kivymd.uix.dialog import MDDialog
 
@@ -92,7 +93,7 @@ class Reel(RelativeLayout):
         self.tiles[self.selected].used = True
 
 
-class GameArea(BoxLayout):
+class GameScreen(Screen):
     reels = []
     num_letters = NumericProperty(defaultvalue=5)
     num_core = NumericProperty(defaultvalue=4)
@@ -100,11 +101,15 @@ class GameArea(BoxLayout):
     found_words = ListProperty()
     time = NumericProperty()
     timer = None
+    real_game = ObjectProperty(None)
 
     def __init__(self, **kwargs):
-        super(GameArea, self).__init__(**kwargs)
+        super(GameScreen, self).__init__(**kwargs)
         self.num_letters, self.num_core = puzzle.DIFFICULTY[
             datetime.datetime.today().weekday()]
+        Clock.schedule_once(self._finish_init)
+
+    def _finish_init(self, dt):
         self.reset()
 
     def reset(self):
@@ -128,7 +133,7 @@ class GameArea(BoxLayout):
         self.reels = [Reel(letters=reel) for reel in reels]
         for reel in self.reels:
             reel.bind(selected=self._selected)
-            self.add_widget(reel)
+            self.real_game.add_widget(reel)
 
     def _selected(self, instance, value):
         if self.running:
@@ -145,6 +150,7 @@ class GameArea(BoxLayout):
                     Logger.debug(f"finished: {self.test_complete()}")
                     if self.test_complete():
                         self.timer.cancel()
+                        self.running = False
                         t = str(datetime.timedelta(seconds=self.time))
                         dialog = MDDialog(
                             title="You Won!!!",
@@ -167,9 +173,3 @@ class GameArea(BoxLayout):
         return True
 
 
-class GameScreen(AnchorLayout):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.add_widget(GameArea(num_letters=5))
-        if platform == 'linux':
-            Window.size = (800, 1200)
