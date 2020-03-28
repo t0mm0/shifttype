@@ -1,5 +1,6 @@
 #:kivy 1.11.1
 #:import GameScreen shifttype.gamescreen.GameScreen
+#:import MenuScreen shifttype.menuscreen.MenuScreen
 
 # Define your background color Template
 <BackgroundColor>:
@@ -66,8 +67,23 @@
         on_press: root.share()
         pos_hint: {'center_x': .5, 'center_y': .5}
 
-ScreenManager:
+<MenuScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'shiftTYPE'
+        Button:
+            text: 'Daily Game'
+            on_press:
+                app.root.transition.direction = 'left' 
+                app.root.current = 'game'
+
+TsScreenManager:
     id: screen_manager
+    MenuScreen:
+        id: menu_screen
+        name: 'menu'
+        manager: 'screen_manager'
     GameScreen:
         id: game_screen
         name: 'game'
