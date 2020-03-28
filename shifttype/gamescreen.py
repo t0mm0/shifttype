@@ -129,7 +129,7 @@ class GameScreen(Screen):
     reels = []
     num_letters = NumericProperty(defaultvalue=5)
     num_core = NumericProperty(defaultvalue=4)
-    running = False
+    running = BooleanProperty(defaultvalue=False)
     found_words = ListProperty()
     time = NumericProperty()
     timer = None
@@ -151,8 +151,13 @@ class GameScreen(Screen):
             num_core=self.num_core)
         Logger.debug(f"core_words: {self.puzzle.core_words}")
         self._make_reels(self.puzzle.reels)
-        self.running = True
-        self.timer = Clock.schedule_interval(self.update_time, 1)
+    
+    def on_running(self, instance, value):
+        Logger.debug(f"on_running: {value}")
+        if value:
+            self.timer = Clock.schedule_interval(self.update_time, 1)
+        else:
+            self.timer.cancel()
 
     def update_time(self, dt):
         self.time += 1
@@ -181,7 +186,6 @@ class GameScreen(Screen):
                         reel.use_selected()
                     Logger.debug(f"finished: {self.test_complete()}")
                     if self.test_complete():
-                        self.timer.cancel()
                         self.running = False
                         t = str(datetime.timedelta(seconds=self.time))
                         game_over_text = ("[size=36sp][b]Well done![/b][/size]\n\n"

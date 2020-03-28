@@ -15,6 +15,7 @@ class TsScreenManager(ScreenManager):
     def go_back(self):
         Logger.debug(f"go_back from: {self.current}")
         if self.current == 'game':
+            self.get_screen('game').running = False
             self.transition.direction = 'right'
             self.current = 'menu'
             return True

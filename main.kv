@@ -75,6 +75,7 @@
         Button:
             text: 'Daily Game'
             on_press:
+                app.root.get_screen('game').running = True
                 app.root.transition.direction = 'left' 
                 app.root.current = 'game'
 
