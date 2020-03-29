@@ -138,6 +138,7 @@ class GameScreen(Screen):
     timer = None
     real_game = ObjectProperty(None)
     store = None
+    game_over = None
 
     def __init__(self, **kwargs):
         super(GameScreen, self).__init__(**kwargs)
@@ -176,8 +177,11 @@ class GameScreen(Screen):
                 for j, tile in enumerate(reel.tiles):
                     tile.used = saved['reels'][i][j]['used']
 
-            if self.test_complete():
-                self.display_game_over()
+        if self.test_complete():
+            self.display_game_over()
+        elif self.game_over:
+            self.remove_widget(self.game_over)
+            self.game_over = None
 
     def on_running(self, instance, value):
         Logger.debug(f"on_running: {value}")
@@ -189,6 +193,12 @@ class GameScreen(Screen):
     def update_time(self, dt):
         self.time += 1
         Logger.debug(f"timer: {self.time}")
+        self.check_current_daily()
+
+    def check_current_daily(self):
+        if self.puzzle.seed[:10] != str(datetime.date.today()):
+            Logger.debug('it is a new day, moving to new puzzle')
+            self.reset()
 
     def _make_reels(self, reels):
         for reel in self.reels:
@@ -215,6 +225,7 @@ class GameScreen(Screen):
                         self.display_game_over()
 
     def run_if_incomplete(self):
+        self.check_current_daily()
         self.running = not self.test_complete()
 
     def display_game_over(self):
@@ -228,9 +239,11 @@ class GameScreen(Screen):
                           f"{', '.join(self._format_core_words())}")
         core_found = len(
             set(self.puzzle.core_words).intersection(self.found_words))
-        self.add_widget(
-            GameOver(game_over_text=game_over_text, time=t,
-                     found=len(self.found_words), core=self.num_core, core_found=core_found))
+        if self.game_over:
+            self.remove_widget(self.game_over)
+        self.game_over = GameOver(game_over_text=game_over_text, time=t,
+                                  found=len(self.found_words), core=self.num_core, core_found=core_found)
+        self.add_widget(self.game_over)
 
     def _format_core_words(self):
         return [f"[color=#00ff00]{w}[/color]" if w in self.found_words else w for w in self.puzzle.core_words]
