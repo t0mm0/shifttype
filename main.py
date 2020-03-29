@@ -31,6 +31,23 @@ class MainApp(App):
         if key == 27:
             return self.root.go_back()
 
+    def on_pause(self):
+        Logger.debug('on_pause')
+        self.root.get_screen('game').save()
+        return True
+
+    def on_resume(self):
+        Logger.debug('on_resume')
+        self.root.get_screen('game').load()
+
+    def on_start(self):
+        Logger.debug('on_start')
+        self.root.get_screen('game').load()
+
+    def on_stop(self):
+        Logger.debug('on_stop')
+        self.root.get_screen('game').save()
+
 
 
 if __name__ == '__main__':

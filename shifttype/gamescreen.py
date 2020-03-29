@@ -5,6 +5,7 @@ from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.logger import Logger
 from kivy.properties import BooleanProperty, ListProperty, NumericProperty, ObjectProperty, StringProperty
+from kivy.storage.jsonstore import JsonStore
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
@@ -131,27 +132,47 @@ class GameScreen(Screen):
     num_core = NumericProperty(defaultvalue=4)
     running = BooleanProperty(defaultvalue=False)
     found_words = ListProperty()
-    time = NumericProperty()
+    time = NumericProperty(defaultvalue=0)
     timer = None
     real_game = ObjectProperty(None)
+    store = None
 
     def __init__(self, **kwargs):
         super(GameScreen, self).__init__(**kwargs)
         self.num_letters, self.num_core = puzzle.DIFFICULTY[
             datetime.datetime.today().weekday()]
         Clock.schedule_once(self._finish_init)
+        self.store = JsonStore('st.json')
 
     def _finish_init(self, dt):
-        self.reset()
+        self.load()
 
-    def reset(self):
+    def reset(self, saved=None):
         self.time = 0
+        seed = None
+
+        if saved:
+            seed = saved['seed']
+            self.num_core = saved['num_core']
+            self.num_letters = saved['num_letters']
+            self.time = saved['time']
+            self.found_words = saved['found_words']
+
         self.puzzle = puzzle.Puzzle(
+            seed=seed,
             num_letters=self.num_letters,
             num_core=self.num_core)
         Logger.debug(f"core_words: {self.puzzle.core_words}")
         self._make_reels(self.puzzle.reels)
-    
+
+        if saved:
+            for i, reel in enumerate(self.reels):
+                for j, tile in enumerate(reel.tiles):
+                    tile.used = saved['reels'][i][j]['used']
+
+            if self.test_complete():
+                self.display_game_over()
+
     def on_running(self, instance, value):
         Logger.debug(f"on_running: {value}")
         if value:
@@ -164,9 +185,8 @@ class GameScreen(Screen):
         Logger.debug(f"timer: {self.time}")
 
     def _make_reels(self, reels):
-        self.found_words = []
         for reel in self.reels:
-            self.remove_widget(reel)
+            self.real_game.remove_widget(reel)
         self.reels = [Reel(letters=reel) for reel in reels]
         for reel in self.reels:
             reel.bind(selected=self._selected)
@@ -186,18 +206,25 @@ class GameScreen(Screen):
                         reel.use_selected()
                     Logger.debug(f"finished: {self.test_complete()}")
                     if self.test_complete():
-                        self.running = False
-                        t = str(datetime.timedelta(seconds=self.time))
-                        game_over_text = ("[size=36sp][b]Well done![/b][/size]\n\n"
-                                          f"You found {len(self.found_words)} words:\n\n"
-                                          f"{', '.join(sorted(self.found_words))}"
-                                          f"\n\nIt took you {t}!\n\n"
-                                          f"Today's core words were:\n\n"
-                                          f"{', '.join(self._format_core_words())}")
-                        core_found = len(set(self.puzzle.core_words).intersection(self.found_words))
-                        self.add_widget(
-                            GameOver(game_over_text=game_over_text, time=t,
-                                     found=len(self.found_words), core=self.num_core, core_found=core_found))
+                        self.display_game_over()
+
+    def run_if_incomplete(self):
+        self.running = not self.test_complete()
+
+    def display_game_over(self):
+        self.running = False
+        t = str(datetime.timedelta(seconds=self.time))
+        game_over_text = ("[size=36sp][b]Well done![/b][/size]\n\n"
+                          f"You found {len(self.found_words)} words:\n\n"
+                          f"{', '.join(sorted(self.found_words))}"
+                          f"\n\nIt took you {t}!\n\n"
+                          f"Today's core words were:\n\n"
+                          f"{', '.join(self._format_core_words())}")
+        core_found = len(
+            set(self.puzzle.core_words).intersection(self.found_words))
+        self.add_widget(
+            GameOver(game_over_text=game_over_text, time=t,
+                     found=len(self.found_words), core=self.num_core, core_found=core_found))
 
     def _format_core_words(self):
         return [f"[color=#00ff00]{w}[/color]" if w in self.found_words else w for w in self.puzzle.core_words]
@@ -208,3 +235,28 @@ class GameScreen(Screen):
                 if not tile.used:
                     return False
         return True
+
+    def save(self):
+        Logger.debug('save game')
+        saved = {}
+        saved['found_words'] = list(self.found_words)
+        saved['num_core'] = self.num_core
+        saved['num_letters'] = self.num_letters
+        saved['time'] = self.time
+        saved['seed'] = self.puzzle.seed
+        saved['reels'] = []
+        for i, reel in enumerate(self.reels):
+            saved['reels'].append([])
+            for tile in reel.tiles:
+                saved['reels'][i].append(
+                    {'letter': tile.letter, 'used': tile.used})
+        self.store['daily'] = saved
+        Logger.debug(saved)
+
+    def load(self):
+        Logger.debug('load game')
+        saved = None
+        if 'daily' in self.store:
+            saved = self.store.get('daily')
+            Logger.debug(saved)
+        self.reset(saved=saved)
