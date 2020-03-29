@@ -1,4 +1,6 @@
 import datetime
+import os
+
 from kivy.animation import Animation
 from kivy.app import App
 from kivy.clock import Clock
@@ -142,7 +144,8 @@ class GameScreen(Screen):
         self.num_letters, self.num_core = puzzle.DIFFICULTY[
             datetime.datetime.today().weekday()]
         Clock.schedule_once(self._finish_init)
-        self.store = JsonStore('st.json')
+        self.store = JsonStore(os.path.join(
+            App.get_running_app().user_data_dir, 'st.json'))
 
     def _finish_init(self, dt):
         self.load()
