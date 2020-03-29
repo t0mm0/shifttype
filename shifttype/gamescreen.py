@@ -141,8 +141,6 @@ class GameScreen(Screen):
 
     def __init__(self, **kwargs):
         super(GameScreen, self).__init__(**kwargs)
-        self.num_letters, self.num_core = puzzle.DIFFICULTY[
-            datetime.datetime.today().weekday()]
         Clock.schedule_once(self._finish_init)
         self.store = JsonStore(os.path.join(
             App.get_running_app().user_data_dir, 'st.json'))
@@ -160,6 +158,11 @@ class GameScreen(Screen):
             self.num_letters = saved['num_letters']
             self.time = saved['time']
             self.found_words = saved['found_words']
+        else:
+            self.num_letters, self.num_core = puzzle.DIFFICULTY[
+                datetime.datetime.today().weekday()]
+            self.time = 0
+            self.found_words = []
 
         self.puzzle = puzzle.Puzzle(
             seed=seed,
