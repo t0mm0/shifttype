@@ -261,5 +261,8 @@ class GameScreen(Screen):
         saved = None
         if 'daily' in self.store:
             saved = self.store.get('daily')
+            if saved['seed'][:10] != str(datetime.date.today()):
+                saved = None
+                Logger.debug('ignored daily saved data is not from today')
             Logger.debug(saved)
         self.reset(saved=saved)
