@@ -16,6 +16,8 @@ from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.screenmanager import Screen
 from kivy.utils import platform
 
+from plyer import vibrator
+
 from . import puzzle
 
 from jnius import autoclass
@@ -44,8 +46,9 @@ class GameOver(BoxLayout):
         self.ids.game_over_label.text = self.game_over_text
 
     def share(self):
-        share_text = (f"I solved the ShiftType Daily Puzzle in {self.time} - "
-                      f"I found {self.found} words, and {self.core_found} of {self.core} core words!")
+        share_text = (
+            f"I solved the ShiftType Daily Puzzle in {self.time} - "
+            f"I found {self.found} words, and {self.core_found} of {self.core} core words!")
         intent = Intent()
         intent.setAction(Intent.ACTION_SEND)
         intent.putExtra(Intent.EXTRA_TEXT, String(share_text))
@@ -139,12 +142,15 @@ class GameScreen(Screen):
     real_game = ObjectProperty(None)
     store = None
     game_over = None
+    vibrate = False
 
     def __init__(self, **kwargs):
         super(GameScreen, self).__init__(**kwargs)
         Clock.schedule_once(self._finish_init)
+        self.app = App.get_running_app()
         self.store = JsonStore(os.path.join(
-            App.get_running_app().user_data_dir, 'st.json'))
+            self.app.user_data_dir, 'st.json'))
+        self.vibrate = self.app.config.getboolean('shifttype', 'vibrate')
 
     def _finish_init(self, dt):
         self.load()
@@ -210,6 +216,8 @@ class GameScreen(Screen):
 
     def _selected(self, instance, value):
         if self.running:
+            if self.vibrate:
+                vibrator.vibrate(.01)
             word = ''
             for reel in self.reels:
                 word += reel.letters[reel.selected]
@@ -241,12 +249,19 @@ class GameScreen(Screen):
             set(self.puzzle.core_words).intersection(self.found_words))
         if self.game_over:
             self.remove_widget(self.game_over)
-        self.game_over = GameOver(game_over_text=game_over_text, time=t,
-                                  found=len(self.found_words), core=self.num_core, core_found=core_found)
+        self.game_over = GameOver(
+            game_over_text=game_over_text,
+            time=t,
+            found=len(
+                self.found_words),
+            core=self.num_core,
+            core_found=core_found)
         self.add_widget(self.game_over)
 
     def _format_core_words(self):
-        return [f"[color=#00ff00]{w}[/color]" if w in self.found_words else w for w in self.puzzle.core_words]
+        return [
+            f"[color=#00ff00]{w}[/color]" if w in self.found_words
+            else w for w in self.puzzle.core_words]
 
     def test_complete(self):
         for reel in self.reels:

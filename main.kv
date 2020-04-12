@@ -73,6 +73,10 @@
         Label:
             text: 'shiftTYPE'
         Button:
+            text: 'Settings'
+            on_press:
+                app.open_settings()
+        Button:
             text: 'Daily Game'
             on_press:
                 app.root.get_screen('game').run_if_incomplete()

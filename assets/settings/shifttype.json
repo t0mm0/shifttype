@@ -1,0 +1,9 @@
+[
+  {
+    "type": "bool",
+    "title": "Vibration",
+    "desc": "Use vibration",
+    "section": "shifttype",
+    "key": "vibrate"
+  }
+]
