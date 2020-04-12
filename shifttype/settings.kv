@@ -1,0 +1,8 @@
+#:kivy 1.11.1
+<ColoredLabel@Label+BackgroundColor>:
+    background_color: 1, 1, 1, 1
+
+<SettingColorPicker>:
+    ColoredLabel:
+        background_color: get_color_from_hex(root.value) if root.value else (1,1,1,1.)
+        background_padding: sp(50), sp(15)

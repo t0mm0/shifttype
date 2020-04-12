@@ -5,5 +5,47 @@
     "desc": "Use vibration",
     "section": "shifttype",
     "key": "vibrate"
+  },
+  {
+    "type": "colorpicker",
+    "title": "Tile Background",
+    "desc": "Color for unused tiles",
+    "section": "shifttype",
+    "key": "tile_bg"
+  },
+  {
+    "type": "colorpicker",
+    "title": "Letter Color",
+    "desc": "Color for unused letters",
+    "section": "shifttype",
+    "key": "letter_color"
+  },
+  {
+    "type": "colorpicker",
+    "title": "Used Tile Background",
+    "desc": "Color for used tiles",
+    "section": "shifttype",
+    "key": "tile_used_bg"
+  },
+  {
+    "type": "colorpicker",
+    "title": "Used Letter Color",
+    "desc": "Color for used letters",
+    "section": "shifttype",
+    "key": "letter_used_color"
+  },
+  {
+    "type": "colorpicker",
+    "title": "Selection color",
+    "desc": "Color of selection box",
+    "section": "shifttype",
+    "key": "selection_color"
+  },
+  {
+    "type": "colorpicker",
+    "title": "Background color",
+    "desc": "Color of game background",
+    "section": "shifttype",
+    "key": "background_color"
   }
 ]

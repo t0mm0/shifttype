@@ -1,21 +1,25 @@
 #:kivy 1.11.1
 #:import GameScreen shifttype.gamescreen.GameScreen
 #:import MenuScreen shifttype.menuscreen.MenuScreen
+#:import get_color_from_hex kivy.utils.get_color_from_hex
 
 # Define your background color Template
 <BackgroundColor>:
     background_color: 1, 1, 1, 1
+    background_padding: 0, 0
     canvas.before:
         Color:
             rgba: root.background_color
         Rectangle:
-            size: self.size
-            pos: self.pos
+            size: self.width - root.background_padding[0], self.height - root.background_padding[1]
+            pos: self.x + (root.background_padding[0] / 2), self.y + (root.background_padding[1] / 2)
 
 <TsTile>:
     text: self.letter
     font_size: self.width / 2
-    background_color: self.get_color(self.used)
+    background_color: self.get_color(self.used, app.tile_bg, app.tile_used_bg)
+    background_padding: sp(1), sp(1)
+    color: self.get_color(self.used, app.letter_color, app.letter_used_color)
 
 <Reel>:
     orientation: 'vertical'
@@ -27,6 +31,7 @@
 
 <GameScreen>:
     real_game: real_game
+    background_color: get_color_from_hex(app.background_color)
     BoxLayout:
         id: real_game
         orientation: 'horizontal'
@@ -35,10 +40,10 @@
         x: (root.width  - self.width) / 2
         canvas.after:
             Color:
-                rgba: 0, 1, 0, 1
+                rgba: get_color_from_hex(app.selection_color)
             Line:
                 rectangle: self.x, self.y, self.width, self.width / root.num_letters
-                width: 5
+                width: sp(3)
 
 <GameOver>:
     id: game_over
@@ -80,7 +85,7 @@
             text: 'Daily Game'
             on_press:
                 app.root.get_screen('game').run_if_incomplete()
-                app.root.transition.direction = 'left' 
+                app.root.transition.direction = 'left'
                 app.root.current = 'game'
 
 TsScreenManager:

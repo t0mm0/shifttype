@@ -14,7 +14,7 @@ from kivy.uix.label import Label
 from kivy.uix.widget import Widget
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.screenmanager import Screen
-from kivy.utils import platform
+from kivy.utils import get_color_from_hex
 
 from plyer import vibrator
 
@@ -65,10 +65,10 @@ class TsTile(Label, BackgroundColor):
         super().__init__(**kwargs)
         Logger.debug(f"new tile: {self.letter}")
 
-    def get_color(self, used):
+    def get_color(self, used, unused_color, used_color):
         if used:
-            return (1, 0, 0, 1)
-        return (.5, .5, .5, 1)
+            return get_color_from_hex(used_color)
+        return get_color_from_hex(unused_color)
 
 
 class ReelSlider(BoxLayout):
@@ -131,7 +131,7 @@ class Reel(RelativeLayout):
         self.tiles[self.selected].used = True
 
 
-class GameScreen(Screen):
+class GameScreen(Screen, BackgroundColor):
     reels = []
     num_letters = NumericProperty(defaultvalue=5)
     num_core = NumericProperty(defaultvalue=4)

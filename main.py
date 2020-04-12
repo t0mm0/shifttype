@@ -4,12 +4,25 @@ kivy.require('1.11.0')
 from kivy.app import App
 from kivy.core.window import Window
 from kivy.logger import Logger
+from kivy.properties import ConfigParserProperty
 from kivy.uix.settings import Settings, SettingsWithNoMenu
 from kivy.uix.screenmanager import ScreenManager
 import logging
 
+from shifttype.settings import SettingColorPicker
+
 
 Logger.setLevel(logging.DEBUG)
+
+DEFAULTS = {
+    'VIBRATE': 1,
+    'TILE_BG': '#7f7f7fff',
+    'TILE_USED_BG': '#ff0000ff',
+    'LETTER_COLOR': '#ffffffff',
+    'LETTER_USED_COLOR': '#ffffffff',
+    'SELECTION_COLOR': '#00ff00ff',
+    'BACKGROUND_COLOR': '#000000ff',
+}
 
 
 class TsScreenManager(ScreenManager):
@@ -23,6 +36,34 @@ class TsScreenManager(ScreenManager):
 
 
 class MainApp(App):
+    tile_bg = ConfigParserProperty(
+        DEFAULTS['TILE_BG'], 'shifttype', 'tile_bg', 'app')
+    tile_used_bg = ConfigParserProperty(
+        DEFAULTS['TILE_USED_BG'],
+        'shifttype',
+        'tile_used_bg',
+        'app')
+    letter_color = ConfigParserProperty(
+        DEFAULTS['LETTER_COLOR'],
+        'shifttype',
+        'letter_color',
+        'app')
+    letter_used_color = ConfigParserProperty(
+        DEFAULTS['LETTER_USED_COLOR'],
+        'shifttype',
+        'letter_used_color',
+        'app')
+    selection_color = ConfigParserProperty(
+        DEFAULTS['SELECTION_COLOR'],
+        'shifttype',
+        'selection_color',
+        'app')
+    background_color = ConfigParserProperty(
+        DEFAULTS['BACKGROUND_COLOR'],
+        'shifttype',
+        'background_color',
+        'app')
+
     def __init__(self, **kwargs):
         self.title = "shiftTYPE"
         super().__init__(**kwargs)
@@ -32,7 +73,13 @@ class MainApp(App):
 
     def build_config(self, config):
         config.setdefaults('shifttype', {
-            'vibrate': '1',
+            'vibrate': DEFAULTS['VIBRATE'],
+            'tile_bg': DEFAULTS['TILE_BG'],
+            'tile_used_bg': DEFAULTS['TILE_USED_BG'],
+            'letter_color': DEFAULTS['LETTER_COLOR'],
+            'letter_used_color': DEFAULTS['LETTER_USED_COLOR'],
+            'selection_color': DEFAULTS['SELECTION_COLOR'],
+            'background_color': DEFAULTS['BACKGROUND_COLOR'],
         })
 
     def on_config_change(self, config, section, key, value):
@@ -43,6 +90,7 @@ class MainApp(App):
                     section, key)
 
     def build_settings(self, settings):
+        settings.register_type('colorpicker', SettingColorPicker)
         settings.add_json_panel(
             'ShiftType',
             self.config,
