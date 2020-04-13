@@ -12,6 +12,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: kivy/buildozer:latest
 
     steps:
       - uses: actions/checkout@v2
@@ -21,12 +23,6 @@ jobs:
           python-version: 3.8
       - name: Install dependencies
         run: |
-          sudo apt update
-          sudo apt install python-setuptools python-pygame python-opengl \
-            python-enchant python-dev build-essential python-pip \
-            libgl1-mesa-dev libgles2-mesa-dev zlib1g-dev libgstreamer1.0-dev \
-            libsdl2-dev libsdl2-ttf-dev libsdl2-mixer-dev libsdl2-image-dev \
-            libpangoft2-1.0-0
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Lint with flake8
