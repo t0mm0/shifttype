@@ -28,7 +28,7 @@ jobs:
           pip install https://github.com/kivy/buildozer/archive/master.zip
           pip install -r requirements.txt
       - name: wemake-python-styleguide
-        uses: wemake-services/wemake-python-styleguide
+        uses: wemake-services/wemake-python-styleguide@0.14.0
         with:
           reporter: 'github-pr-review'
         env:
