@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://game/LetterTile.gd" type="Script" id=1]
+[ext_resource path="res://TileTheme.tres" type="Theme" id=2]
+
+[node name="LetterTile" type="Label"]
+pause_mode = 2
+show_behind_parent = true
+margin_right = 75.0
+margin_bottom = 75.0
+rect_min_size = Vector2( 75, 75 )
+theme = ExtResource( 2 )
+text = "M"
+align = 1
+valign = 1
+script = ExtResource( 1 )

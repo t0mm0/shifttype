@@ -1,0 +1,127 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://game/Game.gd" type="Script" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
+[ext_resource path="res://game/ProgressMaterial.tres" type="Material" id=3]
+[ext_resource path="res://game/Progress.gd" type="Script" id=4]
+[ext_resource path="res://GameTheme.tres" type="Theme" id=5]
+[ext_resource path="res://assets/AlfaSlabOne-Regular.ttf" type="DynamicFontData" id=6]
+[ext_resource path="res://game/CompletePopup.gd" type="Script" id=7]
+
+[sub_resource type="DynamicFont" id=1]
+size = 70
+font_data = ExtResource( 6 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 30
+font_data = ExtResource( 6 )
+
+[node name="Game" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Progress" type="Sprite" parent="."]
+pause_mode = 2
+material = ExtResource( 3 )
+position = Vector2( 360, 640 )
+scale = Vector2( 1.66667, 2.96296 )
+z_index = -5
+texture = ExtResource( 2 )
+script = ExtResource( 4 )
+
+[node name="PausePopup" type="PopupPanel" parent="."]
+pause_mode = 2
+margin_left = 50.0
+margin_top = 100.0
+margin_right = 670.0
+margin_bottom = 1180.0
+theme = ExtResource( 5 )
+popup_exclusive = true
+
+[node name="CenterContainer" type="CenterContainer" parent="PausePopup"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 4.0
+margin_right = -4.0
+margin_bottom = -4.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PausePopup/CenterContainer"]
+margin_left = 179.0
+margin_top = 459.0
+margin_right = 433.0
+margin_bottom = 613.0
+
+[node name="ContinueButton" type="Button" parent="PausePopup/CenterContainer/VBoxContainer"]
+margin_right = 254.0
+margin_bottom = 75.0
+text = "Continue"
+
+[node name="MenuButton" type="Button" parent="PausePopup/CenterContainer/VBoxContainer"]
+margin_top = 79.0
+margin_right = 254.0
+margin_bottom = 154.0
+text = "Menu"
+
+[node name="CompletePopup" type="PopupPanel" parent="."]
+pause_mode = 2
+margin_left = 50.0
+margin_top = 100.0
+margin_right = 670.0
+margin_bottom = 1180.0
+theme = ExtResource( 5 )
+popup_exclusive = true
+script = ExtResource( 7 )
+
+[node name="CenterContainer" type="CenterContainer" parent="CompletePopup"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -306.0
+margin_top = -536.0
+margin_right = 306.0
+margin_bottom = 536.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CompletePopup/CenterContainer"]
+margin_left = 56.0
+margin_top = 385.0
+margin_right = 556.0
+margin_bottom = 687.0
+rect_min_size = Vector2( 500, 0 )
+
+[node name="Label" type="Label" parent="CompletePopup/CenterContainer/VBoxContainer"]
+margin_right = 500.0
+margin_bottom = 97.0
+custom_fonts/font = SubResource( 1 )
+text = "Well Done!"
+align = 1
+
+[node name="ScoreLabel" type="RichTextLabel" parent="CompletePopup/CenterContainer/VBoxContainer"]
+margin_top = 101.0
+margin_right = 500.0
+margin_bottom = 144.0
+rect_clip_content = false
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/normal_font = SubResource( 2 )
+bbcode_enabled = true
+bbcode_text = "[center]You found 22 words[/center]"
+text = "You found 22 words"
+fit_content_height = true
+
+[node name="ShareButton" type="Button" parent="CompletePopup/CenterContainer/VBoxContainer"]
+margin_top = 148.0
+margin_right = 500.0
+margin_bottom = 223.0
+text = "Share"
+
+[node name="MenuButton" type="Button" parent="CompletePopup/CenterContainer/VBoxContainer"]
+margin_top = 227.0
+margin_right = 500.0
+margin_bottom = 302.0
+text = "Menu"
+
+[connection signal="pressed" from="PausePopup/CenterContainer/VBoxContainer/ContinueButton" to="." method="_on_ContinueButton_pressed"]
+[connection signal="pressed" from="PausePopup/CenterContainer/VBoxContainer/MenuButton" to="." method="_on_MenuButton_pressed"]
+[connection signal="pressed" from="CompletePopup/CenterContainer/VBoxContainer/ShareButton" to="CompletePopup" method="_on_ShareButton_pressed"]
+[connection signal="pressed" from="CompletePopup/CenterContainer/VBoxContainer/MenuButton" to="." method="_on_MenuButton_pressed"]

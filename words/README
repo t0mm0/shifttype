@@ -1,0 +1,64 @@
+Word lists suitable for word games. Based on ENABLE2K.  By "suitable
+for word games", I mean to exclude words that are always capitalized.
+So, no "Peru", but yes "china" (as in porcelain).
+
+This is for people who would like to just use the Scrabble word lists,
+but can't for copyright reasons.
+
+Copyright 2022, David Turner.
+
+Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted.
+
+There are three lists:
+
+1. The long list, which includes many obscure words.
+
+2. The short list, which is words that most English speakers will
+know.  This is a subset of the long list.  It's based on words of
+prevalence > 0.8 and frequency > 2.0 from:
+
+Brysbaert, M., Mandera, P., McCormick, S.F. et al. Word prevalence
+norms for 62,000 English lemmas. Behav Res 51, 467–479 (2019).
+https://doi.org/10.3758/s13428-018-1077-9
+
+Unfortunately, that list is lemmatized, and delemmatizing is hard:
+yes, "activisms" is a word that academics use, but it's not going to
+have anything like the prevalence of "activism". It doesn't help that
+the wordnet stemmer is pretty busted (e.g. "siped" -> "sip").  So
+there is still a lot of human judgment involved.  In cases with
+ambiguous plurals ("frescoes, frescos"), I have often removed both
+plurals, because I would rather not argue about which is correct.
+
+I have also removed words such as "japan", "soviet", and "roman", which
+people know but only in the demonym context.  In that context, they
+would be capitalized, so even though they have non-capitalized usages,
+they're not suitable for the short list.  Similarly "timothy",
+"tiffany", etc, which are not demoyms but are names.  Other word forms
+are only used in technical contexts, such as "irrationals", even
+though the lemma ("irrational") is univerally known (prevalance =
+1.0).
+
+3. The list of slurs based on innate characteristics (e.g. racial
+slurs, ableist slurs, etc).  That one is stored in a zip file with the
+password "slurs", because I don't want people to randomly come across
+a giant list of slurs when they are browsing.  These words have been
+removed from the other two lists.  It does not include slurs that have
+common non-slur uses in American English (e.g. the name of that band
+that won a Supreme Court case over the trademark on its name is not
+included).
+
+If you see a missing word in the long list, or a word on the short
+list that you think is too obscure, please file an issue, or e-mail
+novalis@novalis.org.  It would be ideal if you would provide evidence
+for the prevalence of the word (or lack thereof).
+
+If you see a missing word on the short list,
+please only file an issue if you are very certain that the word is
+widely known.  Some words are common only in certain dialects
+(e.g. "crore"), and some words that you would think are common aren't
+as well-known as you think (I was totally convinced that everyone knew
+what a "fen" was until I asked around).
+
+If you see a missing word on the banned slurs list, please e-mail
+novalis@novalis.org: I would prefer not to subject passers-by to that
+discussion.
