@@ -9,3 +9,4 @@ shader_param/progress = 0.0
 shader_param/bg_color = Color( 1, 0.819608, 0.4, 1 )
 shader_param/fg_color = Color( 0.93, 0.28, 0.43, 1 )
 shader_param/selected_color = Color( 1, 1, 1, 1 )
+shader_param/draw_select = true

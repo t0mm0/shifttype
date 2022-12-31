@@ -19,6 +19,9 @@ func _ready() -> void:
 func _on_StartButton_pressed() -> void:
     get_tree().change_scene("res://game/Game.tscn")
 
+func _on_SettingsButton_pressed() -> void:
+    get_tree().change_scene("res://game/menus/SettingsMenu.tscn")
+
 func _notification(what: int) -> void:
     match what:
         NOTIFICATION_WM_QUIT_REQUEST, NOTIFICATION_WM_GO_BACK_REQUEST:

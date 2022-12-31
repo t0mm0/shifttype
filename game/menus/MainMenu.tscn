@@ -11,9 +11,10 @@
 resource_local_to_scene = true
 shader = ExtResource( 4 )
 shader_param/progress = 0.0
-shader_param/bg_color = Color( 1, 0.819608, 0.4, 0 )
+shader_param/bg_color = Color( 1, 0.82, 0.4, 0 )
 shader_param/fg_color = Plane( 0.93, 0.28, 0.43, 1 )
 shader_param/selected_color = Color( 1, 1, 1, 0 )
+shader_param/draw_select = false
 
 [sub_resource type="DynamicFont" id=1]
 size = 100
@@ -66,4 +67,13 @@ margin_bottom = 579.0
 theme = ExtResource( 1 )
 text = "Daily Game"
 
+[node name="SettingsButton" type="MenuButton" parent="VBoxContainer"]
+margin_top = 583.0
+margin_right = 620.0
+margin_bottom = 658.0
+focus_mode = 2
+theme = ExtResource( 1 )
+text = "Settings"
+
 [connection signal="pressed" from="VBoxContainer/StartButton" to="." method="_on_StartButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/SettingsButton" to="." method="_on_SettingsButton_pressed"]

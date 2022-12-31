@@ -7,7 +7,7 @@ export var used: bool = false setget set_used
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-    pass # Replace with function body.
+    get_stylebox("normal").bg_color = Globals.Tile_Color
 
 func set_letter(text: String = '') -> void:
     # make sure we only get 1 letter
@@ -19,7 +19,7 @@ func get_letter() -> String:
 func set_used(new_used: bool = false) -> void:
     used = new_used
     # gray out background when letter is used
-    var new_color: Color = Color.darkgray if used else Color(0, 0.564706, 1)
+    var new_color: Color = Globals.Used_Color if used else Globals.Tile_Color
     if used:
         flash()
     var tween := create_tween()
